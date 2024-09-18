@@ -12,7 +12,7 @@ use bitcoin::util::key::{PrivateKey, PublicKey};
 use reqwest::Client;
 use serde_json::json;
 
-mod generate_address_testnet;
+mod address_generator;
 
 #[tokio::main]
 async fn main() {
@@ -60,7 +60,6 @@ async fn main() {
         output: vec![txout_recipient, txout_change],
     };
 
-    // Sign the transaction
     let sighash = SigHashCache::new(&tx).signature_hash(
         0,
         &sender_address.script_pubkey(),
@@ -87,7 +86,6 @@ async fn main() {
     println!("ScriptPubKey: {:?}", sender_address.script_pubkey());
     println!("Sighash: {:?}", sighash);
 
-    // Send the transaction to the Bitcoin Testnet network
     let client = Client::new();
     let response = client
         .post("https://api.bitcore.io/api/BTC/testnet/tx/send")
